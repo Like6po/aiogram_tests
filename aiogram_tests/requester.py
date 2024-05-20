@@ -58,7 +58,7 @@ class MockedBot:
             if method_name not in result:
                 result[method_name] = CallsList()
 
-            result[method_name].append(self._dict_to_obj(r.dict()))
+            result[method_name].append(self._dict_to_obj(r.model_dump()))
 
         return self._generate_result_obj(result)
 
