@@ -36,18 +36,29 @@ def test_telegram_observ_methods_handler_init():
         _ = TelegramEventObserverHandler(callback, state_data=[])
 
 
+EMPTY_MESSAGE = {
+    "chat": {
+        "id": 0,
+        "type": "private"
+        },
+    "date": 0,
+    "message_id": 0,
+    "text": ""
+}
+
+
 @pytest.mark.asyncio
 async def test_telegram_observ_handler():
     async def callback(*args, **kwargs):
         pass
 
     t_h = MessageHandler(callback)
-    await t_h(None)
+    await t_h(EMPTY_MESSAGE)
     handlers_count = len(t_h.dp.message.handlers)
     assert handlers_count == 1
 
     t_h = MessageHandler(callback, StateFilter(None))
-    await t_h(None)
+    await t_h(EMPTY_MESSAGE)
     handlers_count = len(t_h.dp.message.handlers)
     assert handlers_count == 1
 
@@ -58,7 +69,7 @@ async def test_state_telegram_observ_handler():
         pass
 
     t_h = MessageHandler(callback, state="state", state_data={"name": "Mike"})
-    await t_h(None)
+    await t_h(message=EMPTY_MESSAGE)
 
     context = t_h.dp.fsm.get_context(t_h.bot, 12345678, 12345678)
     state = await context.get_state()
